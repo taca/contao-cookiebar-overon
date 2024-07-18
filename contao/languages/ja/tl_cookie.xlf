@@ -135,13 +135,17 @@
       </trans-unit>
       <trans-unit id="tl_cookie.sourceUrl.1">
         <source>The source URL is used to integrate scripts that must be explicitly integrated in the HEAD section of the website to provide an external service.</source>
-	<target>ソースのURLは、WebサイトのHEADのセクションで外部のサービスを</target>
+	<target>外部のサービスを提供するため
+	WebサイトのHEADのセクションで明示的に統合
+ソースのURLは、</target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceLoadingMode.0">
         <source>Source URL loading mode</source>
+	<target>ソースのURLの読み込みモード</target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceLoadingMode.1">
         <source>Here you can define the moment when the source URL is allowed to be embedded.</source>
+	<target></target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceUrlParameter.0">
         <source>Source URL parameter</source>
