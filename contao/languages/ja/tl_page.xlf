@@ -3,15 +3,19 @@
     <body>
       <trans-unit id="tl_page.cookiebar_legend">
         <source>Cookiebar</source>
+	<target>クッキーバー</target>
       </trans-unit>
       <trans-unit id="tl_page.activateCookiebar.0">
         <source>Activate Cookiebar</source>
+	<target>クッキーバーを有効</target>
       </trans-unit>
       <trans-unit id="tl_page.activateCookiebar.1">
         <source>Activate the cookiebar for this and its subpages.</source>
+	<target>このページと下位のページでクッキーバーを有効にします。</target>
       </trans-unit>
       <trans-unit id="tl_page.triggerCookiebar.0">
         <source>Open cookiebar</source>
+	<target>クッキーバーを開く</target>
       </trans-unit>
       <trans-unit id="tl_page.triggerCookiebar.1">
         <source>Define here whether the page should be used as a trigger for opening the cookie bar. If this page is included in a navigation, the click will not be redirected, but only the cookie bar will be opened (if JavaScript is active). This is useful, for example, for individual navigations that are placed in the footer.</source>

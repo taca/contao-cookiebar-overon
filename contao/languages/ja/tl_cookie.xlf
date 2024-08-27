@@ -135,9 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_cookie.sourceUrl.1">
         <source>The source URL is used to integrate scripts that must be explicitly integrated in the HEAD section of the website to provide an external service.</source>
-	<target>外部のサービスを提供するため
-	WebサイトのHEADのセクションで明示的に統合
-ソースのURLは、</target>
+	<target>ソースのURLは、外部のサービスを提供するためにWebサイトのHEADのセクションで明示的に統合しなければならないスクリプトの統合に使用します。</target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceLoadingMode.0">
         <source>Source URL loading mode</source>
@@ -145,28 +143,35 @@
       </trans-unit>
       <trans-unit id="tl_cookie.sourceLoadingMode.1">
         <source>Here you can define the moment when the source URL is allowed to be embedded.</source>
-	<target></target>
+	<target>ソースのURLを埋め込む時点を指定できます。</target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceUrlParameter.0">
         <source>Source URL parameter</source>
+	<target>ソースのURLのパラメーター</target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceUrlParameter.1">
         <source>Define the load parameters of the source URL to be used.</source>
+	<target>ソースのURLを使用する読み込みのパラメーターを指定します。</target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceVersioning.0">
         <source>Use versioning</source>
+	<target>バージョンを使用</target>
       </trans-unit>
       <trans-unit id="tl_cookie.sourceVersioning.1">
         <source>Adds a cache busting parameter to the script.</source>
+	<target></target>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptConfirmed.0">
         <source>Script (Confirmed)</source>
+	<target></target>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptConfirmed.1">
         <source>Here you can enter the script (without the enclosing script tag) that is output after the cookie has been confirmed.</source>
+	<target></target>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptUnconfirmed.0">
         <source>Script (Not confirmed)</source>
+	<target></target>
       </trans-unit>
       <trans-unit id="tl_cookie.scriptUnconfirmed.1">
         <source>Here you can enter the script (without the enclosing script tag) that should be output if this cookie is not confirmed.</source>
