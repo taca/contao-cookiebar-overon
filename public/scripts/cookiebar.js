@@ -76,6 +76,12 @@ let ContaoCookiebar = (function () {
             // Register trigger events
             registerTriggerEvents();
 
+            // Initialize focus trap
+            initFocusTrap();
+
+            // Register inert observer
+            registerInertObserver();
+
             // Sort cookies
             sortCookiesByLoadingOrder();
 
@@ -115,6 +121,8 @@ let ContaoCookiebar = (function () {
             }else if(btn.hasAttribute('data-deny-all')){
                 mode = 2;
             }
+
+            inert(false)
 
             cookiebar.inputs.forEach(function(input){
                 if(mode === 2){
@@ -624,12 +632,92 @@ let ContaoCookiebar = (function () {
             }
         };
 
+        const isFocusable = function(element) {
+            while (element) {
+                const style = window.getComputedStyle(element);
+
+                if (style.display === 'none') {
+                    return false;
+                }
+
+                element = element.parentElement;
+            }
+
+            return true;
+        };
+
+        const initFocusTrap = function() {
+            const focusable = cookiebar.dom.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), input[type="checkbox"]:not([disabled])');
+
+            cookiebar.toggleOpener = cookiebar.dom.querySelector('[data-ft-opener]');
+            cookiebar.firstFocus = focusable[0];
+            cookiebar.lastFocus = focusable[focusable.length - 1];
+        }
+
+        const focusTrap = function(e) {
+            if (!(e.key === 'Tab' || e.keyCode === 9))
+                return;
+
+            if (document.activeElement === cookiebar.lastFocus && !e.shiftKey) {
+                e.preventDefault();
+                cookiebar.firstFocus?.focus()
+            }
+
+            if (document.activeElement === cookiebar.firstFocus && e.shiftKey) {
+                e.preventDefault()
+                cookiebar.lastFocus?.focus()
+            }
+
+            if (document.activeElement === cookiebar.toggleOpener && !isFocusable(cookiebar.lastFocus) && cookiebar.toggleOpener.ariaExpanded === 'false' && !e.shiftKey) {
+                e.preventDefault();
+                cookiebar.firstFocus?.focus()
+            }
+        }
+
+        const inert = function(state) {
+            document.querySelectorAll('body>*:not(script):not(.cc-wrap)')?.forEach(el => {
+                state ? el.setAttribute('inert', '') : el.removeAttribute('inert');
+            })
+
+            if (state)
+                document.addEventListener('keydown', focusTrap);
+            else
+                document.removeEventListener('keydown', focusTrap)
+        }
+
+        // Check for children that are added whilst the page builds (race-condition)
+        const registerInertObserver = function() {
+            new MutationObserver(list => {
+                for (const mutation of list) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        mutation.addedNodes.forEach(node => {
+                            if (
+                              cookiebar.show
+                              && node.nodeType === Node.ELEMENT_NODE
+                              && !node.matches('.cc-wrap')
+                              && !node.hasAttribute('inert')
+                            ) {
+                                node.setAttribute('inert', '');
+                            }
+                        });
+                    }
+                }
+            }).observe(document.body, {
+                childList: true,
+                subtree: false
+            });
+        }
+
         const checkVisibility = function(){
-            if(cookiebar.show) {
+            if (cookiebar.show) {
                 cookiebar.dom.classList.remove(cookiebar.settings.classes.onSave);
                 cookiebar.dom.classList.add(cookiebar.settings.classes.onShow);
+                inert(true)
             }
-            else cookiebar.dom.classList.remove(cookiebar.settings.classes.onShow);
+            else {
+                cookiebar.dom.classList.remove(cookiebar.settings.classes.onShow);
+                inert(false)
+            }
         };
 
         const toggleCookies = function(){
@@ -649,6 +737,8 @@ let ContaoCookiebar = (function () {
 
         const toggleGroup = function(){
             let state = !this.classList.contains(cookiebar.settings.classes.onGroupToggle);
+
+            this.setAttribute('aria-expanded', state ? 'true' : 'false');
 
             try{
                 let groups = this.parentElement.querySelectorAll(':scope > .toggle-group');
