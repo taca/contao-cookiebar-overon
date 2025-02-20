@@ -140,8 +140,11 @@ class Cookie extends AbstractCookie
      */
     private function addCustomScript(): void
     {
-        if($src = $this->sourceUrl)
+        if ($src = $this->sourceUrl)
         {
+            // Replace the env::url insert tag inline #234
+            $src = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($src);
+
             if ($this->sourceVersioning)
             {
                 $src .= (str_contains($src, '?') ? '&' : '?') . 'v=' . substr(md5(time()),0, 8);
@@ -251,7 +254,7 @@ class Cookie extends AbstractCookie
             }
         }
 
-        if (!empty($modes = StringUtil::deserialize($this->gcmMode)))
+        if (!empty($modes = StringUtil::deserialize($this->gcmMode, true)))
         {
             $consent = "gtag('consent', 'update', { " . implode(', ', array_map(fn ($mode) => "'$mode':'granted'", $modes)) . " });";
             $script = $gtagInit . $consent;

@@ -12,6 +12,8 @@ let ContaoCookiebar = (function () {
             configId: null,
             pageId: null,
             hideOnInit: false,
+            blocking: false,
+            focusTrap: true,
             version: null,
             lifetime: 63072000,
             consentLog: false,
@@ -76,11 +78,16 @@ let ContaoCookiebar = (function () {
             // Register trigger events
             registerTriggerEvents();
 
-            // Initialize focus trap
-            initFocusTrap();
 
-            // Register inert observer
-            registerInertObserver();
+            if (cookiebar.settings.focusTrap) {
+                // Initialize focus trap
+                initFocusTrap();
+            }
+
+            if (cookiebar.settings.blocking) {
+                // Register inert observer
+                registerInertObserver();
+            }
 
             // Sort cookies
             sortCookiesByLoadingOrder();
@@ -658,6 +665,11 @@ let ContaoCookiebar = (function () {
             if (!(e.key === 'Tab' || e.keyCode === 9))
                 return;
 
+            if (!cookiebar.focused) {
+                cookiebar.focused = true;
+                cookiebar.firstFocus?.classList.remove('cc-hide-focus')
+            }
+
             if (document.activeElement === cookiebar.lastFocus && !e.shiftKey) {
                 e.preventDefault();
                 cookiebar.firstFocus?.focus()
@@ -675,14 +687,25 @@ let ContaoCookiebar = (function () {
         }
 
         const inert = function(state) {
-            cookiebar.dom?.parentElement.querySelectorAll(':scope >:not(script):not(.contao-cookiebar)')?.forEach(el => {
-                state ? el.setAttribute('inert', '') : el.removeAttribute('inert');
-            })
+            if (cookiebar.settings.blocking) {
+                cookiebar.dom?.parentElement.querySelectorAll(':scope >:not(script):not(.contao-cookiebar)')?.forEach(el => {
+                    state ? el.setAttribute('inert', '') : el.removeAttribute('inert');
+                })
+            }
 
-            if (state)
+            if (!cookiebar.settings.focusTrap)
+                return;
+
+            if (state) {
                 document.addEventListener('keydown', focusTrap);
-            else
+                cookiebar.dom.querySelector('.cc-inner').onanimationend = () => {
+                    cookiebar.focused = false
+                    cookiebar.firstFocus?.classList.add('cc-hide-focus')
+                    cookiebar.firstFocus?.focus({ preventScroll: true })
+                }
+            } else {
                 document.removeEventListener('keydown', focusTrap)
+            }
         }
 
         // Check for children that are added whilst the page builds (race-condition)
